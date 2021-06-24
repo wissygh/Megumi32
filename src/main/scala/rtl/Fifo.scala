@@ -25,10 +25,13 @@ class FifoIO()(p: FIFOParams) extends Bundle {
     val data_in     = Input(UInt(p.DATA_WIDTH.W))
     val data_out    = Output(UInt(p.DATA_WIDTH.W))
 
-    // debug
-    val mem_out = Output(Vec(p.DEPTH, UInt(p.DATA_WIDTH.W)))
-    val wp = Output(UInt(p.ADDR_DEPTH.W))
-    val rp = Output(UInt(p.ADDR_DEPTH.W))
+    /**
+     * Debug:
+     * 
+     * val mem_out = Output(Vec(p.DEPTH, UInt(p.DATA_WIDTH.W)))
+     * val wp = Output(UInt(p.ADDR_DEPTH.W))
+     * val rp = Output(UInt(p.ADDR_DEPTH.W))
+    */
 }
 
 class Fifo()(p: FIFOParams) extends Module with RequireAsyncReset {
@@ -118,12 +121,16 @@ class Fifo()(p: FIFOParams) extends Module with RequireAsyncReset {
         }
     }
 
-    // Debug
-    io.mem_out.zipWithIndex foreach {
-        case (x, idx) => x := mem(idx)
-    }
-    io.wp := write_pointer.value
-    io.rp := read_pointer.value
+    /**
+     * Debug:
+     * 
+     * io.mem_out.zipWithIndex foreach {
+     *     case (x, idx) => x := mem(idx)
+     * }
+     * io.wp := write_pointer.value
+     * io.rp := read_pointer.value
+     */
+    
 }
 
 object Fifo extends App {
