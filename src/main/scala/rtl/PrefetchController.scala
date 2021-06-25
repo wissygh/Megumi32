@@ -37,6 +37,8 @@ class PrefetchControllerIO()(p: IFParams) extends Bundle {
 
     /** FIFO interface */
     val fifoInf = new FIFOInf()(p)
+    /** @NOTICE: Avoid Combinational loop */
+    val full = Input(Bool())
 }
 
 class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
@@ -50,7 +52,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
       *         // ...
       * 
       */
-      
+
     /** FSM state definition */
     val idle :: branchWait :: Nil = Enum(2)
     val state = RegInit(idle)
@@ -76,7 +78,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
     //////////////////////////////////////////////////////////////////////////////
 
     /** Busy is there are ongoing (or potentially outstanding) transfers */
-    io.fsInf.busy := (cnt =/= 0.U(3.W)) || io.transInf.transRespValid
+    io.fsInf.busy := (cnt =/= 0.U(3.W)) || io.transInf.transResp_valid
 
     //////////////////////////////////////////////////////////////////////////////
     // IF/ID interface
@@ -87,7 +89,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
          * Fetch valid if there are instructions in FIFO or there is an incoming
          * instruction from memory.
          */
-    io.fetch_valid := (fifo_valid || io.transInf.transRespValid) && !(io.fsInf.branch || (flush_cnt > 0.U))
+    io.fetch_valid := (fifo_valid || io.transInf.transResp_valid) && !(io.fsInf.branch || (flush_cnt > 0.U))
 
     //////////////////////////////////////////////////////////////////////////////
     // Transaction request generation
@@ -120,7 +122,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
              */
         io.transInf.transRequest.valid := Mux(cnt === 0.U(3.W), 
                                                 io.fsInf.req && (fifo_cnt_masked + cnt < p.DEPTH.U),
-                                                io.fsInf.req && (fifo_cnt_masked + cnt < p.DEPTH.U) && io.transInf.transRespValid)
+                                                io.fsInf.req && (fifo_cnt_masked + cnt < p.DEPTH.U) && io.transInf.transResp_valid)
     }
 
     /**
@@ -176,7 +178,11 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
          * number of outstanding transactions at the time of the branch).
          */
     fifo_valid := !io.fifoInf.fifo_empty
-    io.fifoInf.fifo_push := io.transInf.transRespValid && (fifo_valid || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
+    /** 
+     * @NOTICED: @Sunnychen I modify the fifo_push logic here to avoid combinational loop
+     * Original: io.fifoInf.fifo_push := io.transInf.transResp_valid && (fifo_valid || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
+     */
+    io.fifoInf.fifo_push := io.transInf.transResp_valid && (!io.full || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
     io.fifoInf.fifo_pop := fifo_valid && io.fetch_ready
 
     //////////////////////////////////////////////////////////////////////////////
@@ -189,7 +195,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
     //////////////////////////////////////////////////////////////////////////////
 
     count_up := io.transInf.transRequest.valid && io.transInf.transRequest.ready
-    count_down := io.transInf.transRespValid
+    count_down := io.transInf.transResp_valid
 
     cnt := MuxLookup(Cat(count_up, count_down), cnt, 
         Seq(
@@ -215,10 +221,10 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
          */
     when(io.fsInf.branch) {
         flush_cnt := cnt
-        when(io.transInf.transRespValid && (cnt > 0.U)) {
+        when(io.transInf.transResp_valid && (cnt > 0.U)) {
             flush_cnt := cnt - 1.U(1.W)
         }
-    }.elsewhen(io.transInf.transRespValid && (flush_cnt > 0.U)) {
+    }.elsewhen(io.transInf.transResp_valid && (flush_cnt > 0.U)) {
         flush_cnt := flush_cnt - 1.U(1.W)
     }
 
