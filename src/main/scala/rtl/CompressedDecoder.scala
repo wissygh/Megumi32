@@ -38,7 +38,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
     val illegal: Unit = { io.illegal_instr := true.B }
 
     switch(io.instr_in(1, 0)) {
-        is("b00".U) {
+        is("b00".U) {   // C0
             switch(funct3) {
                 is("b000".U) {
                     /** c.addi4spn -> addi rd', sp, 4*imm */
@@ -79,12 +79,12 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 is("100".U) { illegal }
             }
         }
-        is("b01".U) {
+        is("b01".U) {   // C1
             switch(funct3) {
 
             }
         }
-        is("b10".U) {
+        is("b10".U) {   // C2
             switch(funct3) {
 
             }
