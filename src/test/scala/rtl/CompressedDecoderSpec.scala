@@ -24,6 +24,46 @@ class CompressedDecoderSpec extends FlatSpec with ChiselScalatestTester with Mat
                 println("%12s = 0x%08x".format(cname, c.io.instr_out.peek.litValue))
                 c.clock.step(1)
             }
+            /**
+              * In this test, the correct output is :
+              * C0:
+                    c.addi4spn = 0x15810513
+                    c.fld = 0x08863487
+                    c.lw = 0x0506a583
+                    c.flw = 0x05c72787
+                    c.fsd = 0x02c53027
+                    c.sw = 0x0684a623
+                    c.fsw = 0x02d42a27
+                C1:
+                    c.addi = 0xfe420213
+                    c.jal = 0xe6bff0ef
+                    c.li = 0x00800493
+                    c.addi16sp = 0x14010113
+                    c.lui = 0xffff84b7
+                    c.srli = 0x0195d593
+                    c.srai = 0x41b6d693
+                    c.andi = 0xfe547413
+                    c.sub = 0x40d60633
+                    c.xor = 0x00c4c4b3
+                    c.or = 0x0087e7b3
+                    c.and = 0x00b47433
+                    c.j = 0x6960006f
+                    c.beqz = 0x0e048963
+                    c.bnez = 0xf0051ae3
+                C2:
+                    c.slli = 0x002b9b93
+                    c.fldsp = 0x0b013387
+                    c.lwsp = 0x0d812283
+                    c.flwsp = 0x07012887
+                    c.jr = 0x00020067
+                    c.mv = 0x00e00333
+                    c.ebreak = 0x00100073
+                    c.jalr = 0x000400e7
+                    c.add = 0x004484b3
+                    c.fsdsp = 0x12613027
+                    c.swsp = 0x06712623
+                    c.fswsp = 0x0c812427
+              */
 
             c.clock.step(2)
 
@@ -143,6 +183,40 @@ class CompressedDecoderSpec extends FlatSpec with ChiselScalatestTester with Mat
 
             /** c.fswsp */
             feed("b111_001011_01000_10".U, "c.fswsp")
+        }
+    }
+
+    it should "Detect the illegal instructions" in {
+        test(new CompressedDecoder(FPU = 1)(new IFParams)) { c => 
+            c.clock.step(2)
+
+            def expIllegal(feed: UInt): Unit = {
+                c.io.instr_in.poke(feed)
+                c.io.illegal_instr.expect(true.B)
+                c.clock.step(1)
+            }
+
+            /** zero */
+            expIllegal(0.U)
+
+            /** C0 Reserved */
+            expIllegal(0x8000.U)
+
+            /** c.srli / c.srai NSE */
+            expIllegal(0x9001.U)
+            expIllegal(0x9401.U)
+
+            /** C1 Reserved */
+            List(0x9c01.U, 0x9c41.U, 0x9c81.U, 0x9cc1.U) foreach { x => expIllegal(x)}
+
+            /** c.slli NSE */
+            expIllegal(0x1002.U)
+
+            /** c.lwsp rd=0 RES */
+            expIllegal(0x4002.U)
+
+            /** c.jr rs1=0 RES */
+            expIllegal(0x8002.U)
         }
     }
 }

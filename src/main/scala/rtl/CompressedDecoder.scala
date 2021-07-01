@@ -36,7 +36,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
     val in = io.instr_in
     val out = io.instr_out
     val spgprs: Bits => Bits = x => Cat(1.U(2.W), x)
-    val illegal: Unit = { io.illegal_instr := true.B }
+    def illegal: Unit = { io.illegal_instr := true.B }
 
     io.illegal_instr := false.B
     out := 0.U
