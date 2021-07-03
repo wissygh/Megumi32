@@ -18,7 +18,7 @@ class CompressedDecoderSpec extends FlatSpec with ChiselScalatestTester with Mat
     behavior of "CompressedDecoder"
 
     it should "Convert all compressed instructions correctly" in {
-        test(new CompressedDecoder(FPU=1)(new IFParams)) { c => 
+        test(new CompressedDecoder()(new IFParams)) { c => 
             def feed(cin: UInt, cname: String) = {
                 c.io.instr_in.poke(cin)
                 println("%12s = 0x%08x".format(cname, c.io.instr_out.peek.litValue))
@@ -187,7 +187,7 @@ class CompressedDecoderSpec extends FlatSpec with ChiselScalatestTester with Mat
     }
 
     it should "Detect the illegal instructions" in {
-        test(new CompressedDecoder(FPU = 1)(new IFParams)) { c => 
+        test(new CompressedDecoder()(new IFParams)) { c => 
             c.clock.step(2)
 
             def expIllegal(feed: UInt): Unit = {

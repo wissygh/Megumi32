@@ -24,6 +24,8 @@ class AlignerIO()(p: IFParams) extends Bundle {
 
     val branch_addr     = Input(UInt(p.XLEN.W))
     val branch          = Input(Bool())         // Asserted if we are branching/jumping now
+
+    val pc              = Output(UInt(p.XLEN.W))
 }
 
 class Aligner()(p: IFParams) extends Module with RequireAsyncReset{
@@ -40,6 +42,8 @@ class Aligner()(p: IFParams) extends Module with RequireAsyncReset{
     val update_state    = Wire(Bool())
     val pc_plus4 = pc + 4.U
     val pc_plus2 = pc + 2.U
+
+    io.pc := pc
 
     /**
       * Update the local registers using gate
@@ -99,20 +103,10 @@ class Aligner()(p: IFParams) extends Module with RequireAsyncReset{
                  */
                 update_state := io.fetch_valid & io.if_valid
                 io.instr_aligned := io.fetch_rdata      // Only the first 16bit are used
-                /**
-                 * increase pc = pc + 2, now fetch:
-                 * |    16    |    16    |
-                 * |   ?[B]   |   ?[A]   |
-                 */
                 update_reg(_pc = pc_plus2, _state = misaligned32)
             }
         } // case: aligned32
         is(misaligned32) {
-            /**
-             * Now fetch:
-             * |    16    |    16    |
-             * |   ?[B]   |   ?[A]   |
-             */
             when(r_instr_h(1, 0) === 0x3.U(2.W)) {
                 /**
                   * Prev [A][1:0] === 2'b11

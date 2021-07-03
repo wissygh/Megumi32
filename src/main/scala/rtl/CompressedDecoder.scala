@@ -17,10 +17,9 @@ import chisel3.stage.ChiselStage
   * We choose to put the IO definition and class definition together because
   * the IO is simple and would never changed
   *
-  * @param FPU: Int -> Is the processor implement the FPU
   * @param p: IFParams -> IF stage parameters
   */
-class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAsyncReset {
+class CompressedDecoder()(p: IFParams) extends Module with RequireAsyncReset {
     val io = IO(new Bundle {
         val instr_in      = Input(UInt(p.XLEN.W))
         val instr_out     = Output(UInt(p.XLEN.W))
@@ -51,7 +50,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 } // 000xxxxxxxxx00
                 is("b001".U) {
                     /** c.fld -> fld rd', imm(rs1') */
-                    if (FPU == 1)
+                    if (p.FPU == 1)
                         out := Cat(0.U(4.W), in(6, 5), in(12, 10), 0.U(3.W), spgprs(in(9, 7)), 3.U(3.W), spgprs(in(4, 2)), Opcode.LOAD_FP)
                     else illegal
                 } // 001xxxxxxxxx00
@@ -61,13 +60,13 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 } // 010xxxxxxxxx00
                 is("b011".U) {
                     /** c.flw -> flw rd', imm(rs1') */
-                    if (FPU == 1)
+                    if (p.FPU == 1)
                         out := Cat(0.U(5.W), in(5), in(12, 10), in(6), 0.U(2.W), spgprs(in(9, 7)), 2.U(3.W), spgprs(in(4, 2)), Opcode.LOAD_FP)
                     else illegal
                 } // 011xxxxxxxxx00
                 is("b101".U) {
                     /** c.fsd -> fsd rs2', imm(rs1') */
-                    if (FPU == 1)
+                    if (p.FPU == 1)
                         out := Cat(0.U(4.W), in(6, 5), in(12), spgprs(in(4, 2)), spgprs(in(9, 7)), 3.U(3.W), in(11, 10), 0.U(3.W), Opcode.STORE_FP)
                     else illegal
                 } // 101xxxxxxxxx00
@@ -76,7 +75,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                     out := Cat(0.U(5.W), in(5), in(12), spgprs(in(4, 2)), spgprs(in(9, 7)), 2.U(3.W), in(11, 10), in(6), 0.U(2.W), Opcode.STORE)
                 } // 110xxxxxxxxx00
                 is("b111".U) {
-                    if (FPU == 1)
+                    if (p.FPU == 1)
                         out := Cat(0.U(5.W), in(5), in(12), spgprs(in(4, 2)), spgprs(in(9, 7)), 2.U(3.W), in(11, 10), in(6), 0.U(2.W), Opcode.STORE_FP)
                     else illegal
                 } // 111xxxxxxxxx00
@@ -190,7 +189,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 }
                 is("b001".U) {
                     /** c.fldsp -> fld rd, imm(x2) */
-                    if(FPU == 1)
+                    if(p.FPU == 1)
                         out := Cat(0.U(3.W), in(4, 2), in(12), in(6, 5), 0.U(3.W), 2.U(5.W), 3.U(3.W), in(11, 7), Opcode.LOAD_FP)
                     else illegal    
                 }
@@ -201,7 +200,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 }
                 is("b011".U) {
                     /** c.flwsp -> flw rd, imm(x2) */
-                    if(FPU == 1)
+                    if(p.FPU == 1)
                         out := Cat(0.U(4.W), in(3, 2), in(12), in(6, 4), 0.U(2.W), 2.U(5.W), 2.U(3.W), in(11, 7), Opcode.LOAD_FP)
                     else illegal
                 }
@@ -245,7 +244,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 }
                 is("b101".U) {
                     /** c.fsdsp -> fsd rs2, imm(x2) */
-                    if(FPU == 1) //instr_i[12:10] -> offset[5:3], instr_i[9:7] -> offset[8:6]
+                    if(p.FPU == 1) //instr_i[12:10] -> offset[5:3], instr_i[9:7] -> offset[8:6]
                         out := Cat(0.U(3.W), in(9, 7), in(12), in(6, 2), 2.U(5.W), 3.U(3.W), in(11, 10), 0.U(3.W), Opcode.STORE_FP)
                     else illegal
                 }
@@ -255,7 +254,7 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
                 }
                 is("b111".U) {
                     /** c.fswsp -> fsw rs2, imm(x2) */
-                    if(FPU == 1)
+                    if(p.FPU == 1)
                         out := Cat(0.U(4.W), in(8, 7), in(12), in(6, 2), 2.U(5.W), 2.U(3.W), in(11, 9), 0.U(2.W), Opcode.STORE_FP)
                     else illegal
                 }
@@ -267,5 +266,5 @@ class CompressedDecoder(FPU: Int = 0)(p: IFParams) extends Module with RequireAs
 }
 
 object CompressedDecoder extends App {
-    (new ChiselStage).emitVerilog(new CompressedDecoder(FPU = 1)(new IFParams))
+    (new ChiselStage).emitVerilog(new CompressedDecoder()(new IFParams))
 }

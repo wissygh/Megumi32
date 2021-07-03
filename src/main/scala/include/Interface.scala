@@ -99,3 +99,51 @@ class InstrInf[T <: BasicParams]()(p: T) extends Bundle {
     val rdata       = Input(UInt(p.XLEN.W))         // Read data
     val rvalid      = Input(Bool())                 // Response transfer request
 }
+
+/**
+  * IO interface for IF stage, used to calculate the exception offsets.
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class TrapBaseAddr[T <: BasicParams]()(p: T) extends Bundle {
+    val maddr = Input(UInt(p.TRAP_LEN.W))
+    val uaddr = Input(UInt(p.TRAP_LEN.W))
+    val mux   = Input(UInt(2.W))
+}
+
+/**
+  * IF/ID Pipeline Registers IO interface
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class IFPipelineReg[T <: BasicParams]()(p: T) extends Bundle {
+    val instrValid_ID   = Bool()            // Instruction in IF/ID pipeline is valid
+    val instrRdata_ID   = UInt(p.XLEN.W)    // Read instruction is sampled and sent to ID stage for decoding
+    val isCompressed_ID = Bool()            // Compressed decoder thinks this is a compressed instruction
+    val illegalCInsn_ID = Bool()            // Compressed decoder thinks this is an invalid instruction
+    val pc_IF           = UInt(p.XLEN.W)
+    val pc_ID           = UInt(p.XLEN.W)
+    val isFetchFailed   = Bool()
+
+    def stall(): Unit = {
+        instrValid_ID   := instrValid_ID
+        instrRdata_ID   := instrRdata_ID
+        isCompressed_ID := isCompressed_ID
+        illegalCInsn_ID := illegalCInsn_ID
+        pc_IF           := pc_IF
+        pc_ID           := pc_ID
+        isFetchFailed   := isFetchFailed
+    }
+}
+
+/**
+  * Address used to restore PC when the interrupt/execption is served
+  * IO interfaces
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class Xepc[T <: BasicParams]()(p: T) extends Bundle {
+    val mepc = Input(UInt(p.XLEN.W))
+    val uepc = Input(UInt(p.XLEN.W))
+    val depc = Input(UInt(p.XLEN.W))
+}

@@ -179,10 +179,9 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
          */
     fifo_valid := !io.fifoInf.fifo_empty
     /** 
-     * @NOTICED: @Sunnychen I modify the fifo_push logic here to avoid combinational loop
-     * Original: io.fifoInf.fifo_push := io.transInf.transResp_valid && (fifo_valid || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
+     * @NOTICED: @Sunnychen combinational loop warning
      */
-    io.fifoInf.fifo_push := io.transInf.transResp_valid && (!io.full || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
+    io.fifoInf.fifo_push := io.transInf.transResp_valid && (fifo_valid || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
     io.fifoInf.fifo_pop := fifo_valid && io.fetch_ready
 
     //////////////////////////////////////////////////////////////////////////////
