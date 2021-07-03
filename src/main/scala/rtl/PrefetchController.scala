@@ -179,7 +179,7 @@ class PrefetchController()(p: IFParams) extends Module with RequireAsyncReset{
          */
     fifo_valid := !io.fifoInf.fifo_empty
     /** 
-     * @NOTICED: @Sunnychen combinational loop warning
+     * @NOTICED: @Sunnychen combinational loop warning: fifo_empty
      */
     io.fifoInf.fifo_push := io.transInf.transResp_valid && (fifo_valid || !io.fetch_ready) && !(io.fsInf.branch || (flush_cnt > 0.U))
     io.fifoInf.fifo_pop := fifo_valid && io.fetch_ready

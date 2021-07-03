@@ -148,6 +148,7 @@ class IfStage()(p: IFParams) extends Module with RequireAsyncReset {
     when(io.pcSet) {
         branchReq := true.B
     }.elsewhen(fetchValid) {
+        /** @Sunnychen: Comb loop warning: fetchValid */
         when(io.req && validIF) {
             fetchReady := alignerReady
         }
@@ -204,6 +205,6 @@ class IfStage()(p: IFParams) extends Module with RequireAsyncReset {
 }
 
 object IfStage extends App {
-    /**  */
+    /** @Sunnychen: Comb loop warning */
     (new ChiselStage).emitFirrtl(new IfStage()(new IFParams))
 }
