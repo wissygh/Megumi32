@@ -62,6 +62,14 @@ class ObiParams(depth: Option[Int] = None) extends IFParams(depth) {
     val TRANS_STABLE: Int = 0       // Are trans_addr_i, trans_we_i, trans_be_i, trans_wdata_i, trans_atop_i signals stable during a non-accepted transaction?
 }
 
+class IDParams extends BasicParams {}
+
+class RegParams extends IDParams {
+    val ADDR_WIDTH: Int         = if (FPU == 1) 6 else 5
+    val READ_PORT_NUM: Int      = 3
+    val WRITE_PORT_NUM: Int     = 2
+}
+
 object Opcode {
     val SYSTEM    = 0x73.U(7.W)
     val FENCE     = 0x0f.U(7.W)
