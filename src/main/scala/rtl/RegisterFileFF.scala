@@ -85,21 +85,15 @@ class RegisterFileFF()(p: RegParams) extends Module with RequireAsyncReset {
     mem(0) := 0.U
 
     (1 until NUM_WORDS) foreach { i => 
-        mem(i) := PriorityMux(Seq(
-            we_dec(1)(i) -> io.wdata(1),
-            we_dec(0)(i) -> io.wdata(0),
-            (!we_dec(0)(i) && !we_dec(1)(i)) -> mem(i)
-        ))
+        mem(i) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(i) -> io.wdata(x))).reverse :+ 
+                    (Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(i)).reduce((x, y) => x && y) -> mem(i)))
     }
 
     if (p.FPU == 1) {
         /** Floating point registers */
         (0 until NUM_FP_WORDS) foreach { l => 
-            mem_fp(l) := PriorityMux(Seq(
-            we_dec(1)(l+NUM_WORDS) -> io.wdata(1),
-            we_dec(0)(l+NUM_WORDS) -> io.wdata(0),
-            (!we_dec(0)(l+NUM_WORDS) && !we_dec(1)(l+NUM_WORDS)) -> mem_fp(l)
-        ))
+            mem_fp(l) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(l+NUM_WORDS) -> io.wdata(x))).reverse :+ 
+                    (Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(l+NUM_WORDS)).reduce((x, y) => x && y) -> mem_fp(l)))
         }
     }
 }
