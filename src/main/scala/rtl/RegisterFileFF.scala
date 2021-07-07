@@ -84,16 +84,18 @@ class RegisterFileFF()(p: RegParams) extends Module with RequireAsyncReset {
     /** R0 is nil */
     mem(0) := 0.U
 
-    (1 until NUM_WORDS) foreach { i => 
-        mem(i) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(i) -> io.wdata(x))).reverse :+ 
-                    (Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(i)).reduce((x, y) => x && y) -> mem(i)))
+    (1 until NUM_WORDS) foreach { i =>
+        when(!(Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(i)).reduce((x, y) => x && y))) {
+            mem(i) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(i) -> io.wdata(x))).reverse)
+        } 
     }
 
     if (p.FPU == 1) {
         /** Floating point registers */
-        (0 until NUM_FP_WORDS) foreach { l => 
-            mem_fp(l) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(l+NUM_WORDS) -> io.wdata(x))).reverse :+ 
-                    (Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(l+NUM_WORDS)).reduce((x, y) => x && y) -> mem_fp(l)))
+        (0 until NUM_FP_WORDS) foreach { l =>
+            when(!Seq.tabulate(p.WRITE_PORT_NUM)(x => !we_dec(x)(l+NUM_WORDS)).reduce((x, y) => x && y)) {
+                mem_fp(l) := PriorityMux(Seq.tabulate(p.WRITE_PORT_NUM)(x => (we_dec(x)(l+NUM_WORDS) -> io.wdata(x))).reverse)
+            } 
         }
     }
 }
