@@ -147,3 +147,136 @@ class Xepc[T <: BasicParams]()(p: T) extends Bundle {
     val uepc = Input(UInt(p.XLEN.W))
     val depc = Input(UInt(p.XLEN.W))
 }
+
+/**
+  * Return from exception instruction/debug encountered & without deassert
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class RetInsn[T <: BasicParams]()(p: T) extends Bundle {
+    val mret        = Bool()    // Return from exception instruction encountered (M)
+    val uret        = Bool()    // Return from exception instruction encountered (U)
+    val dret        = Bool()    // Return from debug (M)
+
+    val mret_dec    = Bool()    // Return from exception instruction encountered (M) without deassert
+    val uret_dec    = Bool()    // Return from exception instruction encountered (U) without deassert 
+    val dret_dec    = Bool()    // Return from debug (M) without deassert
+}
+
+/**
+  * Registers used signals
+  *
+  * @param p: ID stage parameters
+  */
+class RegUsed()(p: IDParams) extends Bundle {
+    val a   = Bool()    // rs1 is used by current instruction
+    val b   = Bool()    // rs2 is used by current instruction
+    val c   = Bool()    // rs3 is used by current instruction
+    val aFP = Bool()    // fp reg a is used
+    val bFP = Bool()    // fp reg b is used
+    val cFP = Bool()    // fp reg c is used
+    val dFP = Bool()    // fp reg d is used
+}
+
+/**
+  * ALU control signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class ALUSig[T <: BasicParams]()(p: T) extends Bundle {
+    val en              = Bool()                // ALU enable
+    val operator        = UInt(ALUOp.width.W)   // ALU operation selection
+    val opAMuxSel       = UInt(3.W)             // Operand A selection: reg value, PC, immediate or zero
+    val opBMuxSel       = UInt(3.W)             // Operand B selection: reg value or immediate
+    val opCMuxSel       = UInt(2.W)             // Operand C selection: reg value or jump target
+    // val aluVecMode      = UInt(2.W)             // Selects between 32/16/8 bit vectorial modes
+    // val scalarReplication = Bool()              // Scalar replication enable
+    // val scalarReplicationC = Bool()             // Scalar replication enable for operand C
+    val immAMuxSel      = Bool()                // immediate selection for operand A
+    val immBMuxSel      = UInt(4.W)             // immediate selection for operand B
+    val regCMux         = UInt(2.W)             // Register C selection: S3, RD or 0
+    // val isClpx          = Bool()                // Whether the instruction is complex or not
+    // val isSubrot        = Bool()
+}
+
+/**
+  * MUL related control signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class MULSig[T <: BasicParams]()(p: T) extends Bundle {
+    val operator        = UInt(MULop.width.W)   // Multiplication operation selection
+    val intEn           = Bool()                // Perform integer multiplication
+    // val dotEn           = Bool()                // Perfrom dot multiplication
+    val immMux          = Bool()                // Multiplication immediate mux selector 
+    val selSubword      = Bool()                // Select subwords for 16x16 bit for multiplier
+    val signedMode      = UInt(2.W)             // Multiplication signed mode
+    // val dotSigned       = UInt(2.W)             // Dot product in signed mode
+}
+
+/**
+  * FPU related control signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class FPUSig[T <: BasicParams]()(p: T) extends Bundle {
+    val frm             = Input(UInt(FPU.C_RM.W))               // Rounding mode from float CSR
+
+    val dstFmt          = Output(UInt(FPU.FP_FORMAT_BITS.W))    // FPU destination format
+    val srcFmt          = Output(UInt(FPU.FP_FORMAT_BITS.W))    // FPU source format
+    val intFmt          = Output(UInt(FPU.INT_FORMAT_BITS.W))   // FPU integer format (for casts)
+}
+
+/**
+  * Register file related signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class RegfileSig[T <: BasicParams]()(p: T) extends Bundle {
+    val memWe           = Bool()        // Write enable for regfile
+    val aluWe           = Bool()        // Write enable for 2nd regfile port
+    val aluWeDec        = Bool()        // Write enable for 2nd regfile port without deassert
+    val aluWaddrSel     = Bool()        // Select register write address for ALU/MUL operation
+}
+
+/**
+  * CSR manipulation signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class CSRSig[T <: BasicParams]()(p: T) extends Bundle {
+    val access          = Bool()                // Access to CSR
+    val status          = Bool()                // Access to xstatus CSR
+    val op              = UInt(CSROp.width.W)   // Operation to perform on CSR
+    val currentPrivLvl  = UInt(PrivLvl.width.W) // The current privilege level
+}
+
+/**
+  * LD/ST unit signals
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class LSUSig[T <: BasicParams]()(p: T) extends Bundle {
+    val dataReq             = Bool()                // Start transaction to data memory
+    val dataWe              = Bool()                // Data memory write enable
+    val prepostUseIncr      = Bool()                // When not active bypass the alu result for address calculation
+    val dataType            = UInt(2.W)             // Data type on data memory: byte, half word or word
+    val dataSignExtension   = UInt(2.W)             // Sign extension on read data from data memory / NaN boxing
+    val dataRegOffset       = UInt(2.W)             // Offset in byte inside register for stores
+    val dataLoadEvent       = Bool()                // Data request is in the special event range
+}
+
+/**
+  * Control signals interface
+  *
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+class CtrlSig[T <: BasicParams]()(p: T) extends Bundle {
+    val aluSig      = Output(new ALUSig()(p))       // ALU signals
+    val mulSig      = Output(new MULSig()(p))       // MULT signals
+    val fpuSig      = new FPUSig()(p)               // FPU signals
+    val regfileSig  = Output(new RegfileSig()(p))   // Register file related signals
+    val csrSig      = Output(new CSRSig()(p))       // CSR manipulation signals
+    val lsuSig      = Output(new LSUSig()(p))       // LD/ST unit signals
+    val atop        = Output(UInt(6.W))             // Atomic memory access
+}

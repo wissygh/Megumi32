@@ -12,11 +12,15 @@ import chisel3._
 import chisel3.util._
 
 trait BasicParams {
-    val PULP_OBI: Int   = 0     // Legacy PULP OBI behavior
-    // val PULP_XPULP   = 0     // PULP ISA Extension (no use in our implementation)
-    val XLEN: Int       = 32    // Width of an integer register in bits
-    val FPU: Int        = 1
-    val TRAP_LEN: Int   = 24
+    val PULP_OBI: Int       = 0     // Legacy PULP OBI behavior
+    // val PULP_XPULP       = 0     // PULP ISA Extension (no use in our implementation)
+    val XLEN: Int           = 32    // Width of an integer register in bits
+    val FPU: Int            = 1
+    val A_EXTENDSION        = 1
+    val TRAP_LEN: Int       = 24
+    val USE_PMP             = 0
+    val APU_WOP_CPU         = 6     // In cva6 docs, this may have no use?
+    val DEBUG_TRIGGER_EN    = 1
 
     /** OBI interface relative.*/
     val BE_WIDTH: Int   = 4     // Byte enable width
@@ -90,4 +94,150 @@ object Opcode {
     val STORE_FP  = 0x27.U(7.W)
     val LOAD_FP   = 0x07.U(7.W)
     val AMO       = 0x2F.U(7.W)
+}
+
+object ALUOp {
+    val width = 7
+    
+    val ADD   = "b0011000".U
+    val SUB   = "b0011001".U
+    val ADDU  = "b0011010".U
+    val SUBU  = "b0011011".U
+    val ADDR  = "b0011100".U
+    val SUBR  = "b0011101".U
+    val ADDUR = "b0011110".U
+    val SUBUR = "b0011111".U
+
+    val XOR   = "b0101111".U
+    val OR    = "b0101110".U
+    val AND   = "b0010101".U
+
+    // Shifts
+    val SRA   = "b0100100".U
+    val SRL   = "b0100101".U
+    val ROR   = "b0100110".U
+    val SLL   = "b0100111".U
+
+    // bit manipulation
+    val BEXT  = "b0101000".U
+    val BEXTU = "b0101001".U
+    val BINS  = "b0101010".U
+    val BCLR  = "b0101011".U
+    val BSET  = "b0101100".U
+    val BREV  = "b1001001".U
+
+    // Bit counting
+    val FF1   = "b0110110".U
+    val FL1   = "b0110111".U
+    val CNT   = "b0110100".U
+    val CLB   = "b0110101".U
+
+    // Sign-/zero-extensions
+    val EXTS  = "b0111110".U
+    val EXT   = "b0111111".U
+
+    // Comparisons
+    val LTS   = "b0000000".U
+    val LTU   = "b0000001".U
+    val LES   = "b0000100".U
+    val LEU   = "b0000101".U
+    val GTS   = "b0001000".U
+    val GTU   = "b0001001".U
+    val GES   = "b0001010".U
+    val GEU   = "b0001011".U
+    val EQ    = "b0001100".U
+    val NE    = "b0001101".U
+
+    // Set Lower Than operations
+    val SLTS  = "b0000010".U
+    val SLTU  = "b0000011".U
+    val SLETS = "b0000110".U
+    val SLETU = "b0000111".U
+
+    // Absolute value
+    val ABS   = "b0010100".U
+    val CLIP  = "b0010110".U
+    val CLIPU = "b0010111".U
+
+    // Insert/extract
+    val INS   = "b0101101".U
+
+    // min/max
+    val MIN   = "b0010000".U
+    val MINU  = "b0010001".U
+    val MAX   = "b0010010".U
+    val MAXU  = "b0010011".U
+
+    // div/rem
+    val DIVU  = "b0110000".U // bit 0 is used for signed mode, bit 1 is used for remdiv
+    val DIV   = "b0110001".U // bit 0 is used for signed mode, bit 1 is used for remdiv
+    val REMU  = "b0110010".U // bit 0 is used for signed mode, bit 1 is used for remdiv
+    val REM   = "b0110011".U // bit 0 is used for signed mode, bit 1 is used for remdiv
+
+    val SHUF  = "b0111010".U
+    val SHUF2 = "b0111011".U
+    val PCKLO = "b0111000".U
+    val PCKHI = "b0111001".U
+}
+
+object MULop {
+    val width = 3
+
+    val MAC32 = "b000".U
+    val MSU32 = "b001".U
+    val I     = "b010".U
+    val IR    = "b011".U
+    val DOT8  = "b100".U
+    val DOT16 = "b101".U
+    val H     = "b110".U
+}
+
+object FPU {
+    // ---------
+    // FP TYPES
+    // ---------
+    // | Enumerator | Format           | Width  | EXP_BITS | MAN_BITS
+    // |:----------:|------------------|-------:|:--------:|:--------:
+    // | FP32       | IEEE binary32    | 32 bit | 8        | 23
+    // | FP64       | IEEE binary64    | 64 bit | 11       | 52
+    // | FP16       | IEEE binary16    | 16 bit | 5        | 10
+    // | FP8        | binary8          |  8 bit | 5        | 2
+    // | FP16ALT    | binary16alt      | 16 bit | 8        | 7
+    // *NOTE:* Add new formats only at the end of the enumeration for backwards compatibilty!
+
+    val NUM_FP_FORMATS: Int         = 5     // Change me to add formats
+    val FP_FORMAT_BITS: Int         = log2Ceil(NUM_FP_FORMATS)
+
+    // ---------
+    // INT TYPES
+    // ---------
+    // | Enumerator | Width  |
+    // |:----------:|-------:|
+    // | INT8       |  8 bit |
+    // | INT16      | 16 bit |
+    // | INT32      | 32 bit |
+    // | INT64      | 64 bit |
+    // *NOTE:* Add new formats only at the end of the enumeration for backwards compatibilty!
+    val NUM_INT_FORMATS: Int        = 4     // Change me to add formats
+    val INT_FORMAT_BITS: Int        = log2Ceil(NUM_INT_FORMATS)
+
+    val C_RM: Int                   = 3
+}
+
+object CSROp {
+    val width = 2
+
+    val CSR_OP_READ     = "b00".U
+    val CSR_OP_WRITE    = "b01".U
+    val CSR_OP_SET      = "b10".U
+    val CSR_OP_CLEAR    = "b11".U
+}
+
+object PrivLvl {
+    val width = 2
+
+    val PRIV_LVL_M = "b11".U
+    val PRIV_LVL_H = "b10".U
+    val PRIV_LVL_S = "b01".U
+    val PRIV_LVL_U = "b00".U
 }
