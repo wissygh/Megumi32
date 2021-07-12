@@ -208,6 +208,13 @@ object FPU {
     val NUM_FP_FORMATS: Int         = 5     // Change me to add formats
     val FP_FORMAT_BITS: Int         = log2Ceil(NUM_FP_FORMATS)
 
+    /** FP formats */
+    val FP32        = 0.U(FP_FORMAT_BITS.W)
+    val FP64        = 1.U(FP_FORMAT_BITS.W)
+    val FP16        = 2.U(FP_FORMAT_BITS.W)
+    val FP8         = 3.U(FP_FORMAT_BITS.W)
+    val FP16ALT     = 4.U(FP_FORMAT_BITS.W)
+
     // ---------
     // INT TYPES
     // ---------
@@ -221,7 +228,32 @@ object FPU {
     val NUM_INT_FORMATS: Int        = 4     // Change me to add formats
     val INT_FORMAT_BITS: Int        = log2Ceil(NUM_INT_FORMATS)
 
+    /** Int formats */
+    val INT8        = 0.U(INT_FORMAT_BITS.W)
+    val INT16       = 1.U(INT_FORMAT_BITS.W)
+    val INT32       = 2.U(INT_FORMAT_BITS.W)
+    val INT64       = 3.U(INT_FORMAT_BITS.W)
+
     val C_RM: Int                   = 3
+
+    /** FP operations */
+    val OP_BITS     = 4
+    
+    val FMADD       = 0.U(OP_BITS.W)
+    val FNMSUB      = 1.U(OP_BITS.W)
+    val ADD         = 2.U(OP_BITS.W)
+    val MUL         = 3.U(OP_BITS.W)
+    val DIV         = 4.U(OP_BITS.W)
+    val SQRT        = 5.U(OP_BITS.W)
+    val SGNJ        = 6.U(OP_BITS.W)
+    val MINMAX      = 7.U(OP_BITS.W)
+    val CMP         = 8.U(OP_BITS.W)
+    val CLASSIFY    = 9.U(OP_BITS.W)
+    val F2F         = 10.U(OP_BITS.W)
+    val F2I         = 11.U(OP_BITS.W)
+    val I2F         = 12.U(OP_BITS.W)
+    val CPKAB       = 13.U(OP_BITS.W)
+    val CPKCD       = 14.U(OP_BITS.W)
 }
 
 object CSROp {
@@ -240,4 +272,67 @@ object PrivLvl {
     val PRIV_LVL_H = "b10".U
     val PRIV_LVL_S = "b01".U
     val PRIV_LVL_U = "b00".U
+}
+
+object CtrlOpConstans {
+    /** Bool */
+    val N = 0.U(1.W)
+    val Y = 1.U(1.W)
+
+    /** Operand A selection */
+    val OP_A_REGA_OR_FWD = "b000".U(3.W)
+    val OP_A_CURRPC      = "b001".U(3.W)
+    val OP_A_IMM         = "b010".U(3.W)
+    val OP_A_REGB_OR_FWD = "b011".U(3.W)
+    val OP_A_REGC_OR_FWD = "b100".U(3.W)
+
+    /** Operand B selection */
+    val OP_B_REGB_OR_FWD = "b000".U(3.W)
+    val OP_B_REGC_OR_FWD = "b001".U(3.W)
+    val OP_B_IMM         = "b010".U(3.W)
+    val OP_B_REGA_OR_FWD = "b011".U(3.W)
+    val OP_B_BMASK       = "b100".U(3.W)
+
+    /** Operand C selection */
+    val OP_C_REGC_OR_FWD = "b00".U(2.W)
+    val OP_C_REGB_OR_FWD = "b01".U(2.W)
+    val OP_C_JT          = "b10".U(2.W)
+
+    /** Immediate A selection */
+    val IMMA_Z           = 0.U(1.W)
+    val IMMA_ZERO        = 1.U(1.W)
+
+    /** Immediate B selection */
+    val IMMB_I      = "b0000".U(4.W)
+    val IMMB_S      = "b0001".U(4.W)
+    val IMMB_U      = "b0010".U(4.W)
+    val IMMB_PCINCR = "b0011".U(4.W)
+    val IMMB_S2     = "b0100".U(4.W)
+    val IMMB_S3     = "b0101".U(4.W)
+    val IMMB_VS     = "b0110".U(4.W)
+    val IMMB_VU     = "b0111".U(4.W)
+    val IMMB_SHUF   = "b1000".U(4.W)
+    val IMMB_CLIP   = "b1001".U(4.W)
+    val IMMB_BI     = "b1011".U(4.W)
+
+    /** regCMux selection */
+    val REGC_S1     = "b10".U(2.W)
+    val REGC_S4     = "b00".U(2.W)
+    val REGC_RD     = "b01".U(2.W)
+    val REGC_ZERO   = "b11".U(2.W)
+
+    /** Multiplication immediates */
+    val MIMM_ZERO   = 0.U(1.W)
+    val MIMM_S3     = 1.U(1.W)
+
+    /** Branch types */
+    val BRANCH_NONE = "b00".U(2.W)
+    val BRANCH_JAL  = "b01".U(2.W)
+    val BRANCH_JALR = "b10".U(2.W)
+    val BRANCH_COND = "b11".U(2.W) // conditional branches
+
+    /** Jump target mux */
+    val JT_JAL      = "b01".U(2.W)
+    val JT_JALR     = "b10".U(2.W)
+    val JT_COND     = "b11".U(2.W)
 }

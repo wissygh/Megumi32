@@ -248,7 +248,6 @@ class CSRSig[T <: BasicParams]()(p: T) extends Bundle {
     val access          = Bool()                // Access to CSR
     val status          = Bool()                // Access to xstatus CSR
     val op              = UInt(CSROp.width.W)   // Operation to perform on CSR
-    val currentPrivLvl  = UInt(PrivLvl.width.W) // The current privilege level
 }
 
 /**
