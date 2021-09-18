@@ -15,6 +15,7 @@ import megumi32.include.CtrlOpConstans._
 import megumi32.include.ALUOp._
 import megumi32.include.MULop._
 import megumi32.include.FPU._
+import megumi32.include.CSRNum._
 import megumi32.include.APU._
 import megumi32.include.CSROp._
 import megumi32.include.Opcode._
@@ -1197,20 +1198,20 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                           (io.insnRdata(31,20) === CSR_FRM) |
                           (io.insnRdata(31,20) === CSR_FCSR)){
                     //FP
-                    csr_illegal := Mux((p.FPU == 1).asBool(), false.B, true.B)
+                    csrIllegal := Mux((p.FPU == 1).asBool(), false.B, true.B)
                 }.elsewhen((io.insnRdata(31,20) === CSR_MVENDORID) |
                               (io.insnRdata(31,20) === CSR_MARCHID) |
                               (io.insnRdata(31,20) === CSR_MIMPID) |
                               (io.insnRdata(31,20) === CSR_MHARTID)){
                     // Writes to read only CSRs results in illegal instruction
-                    csr_illegal := Mux(csrOp === CSR_OP_READ, false.B, true.B)
+                    csrIllegal := Mux(csrOp === CSR_OP_READ, false.B, true.B)
                 }.elsewhen((io.insnRdata(31,20) === CSR_MSTATUS) |
                               (io.insnRdata(31,20) === CSR_MEPC) |
                               (io.insnRdata(31,20) === CSR_MTVEC) |
                               (io.insnRdata(31,20) === CSR_MCAUSE)){
                     // These are valid CSR registers
                     // Not illegal, but treat as status CSR for side effect handling
-                    io.csr_status_o := true.B
+                    io.ctrlSig.csrSig.status := true.B
                 }.elsewhen((io.insnRdata(31,20) === CSR_MISA) |
                               (io.insnRdata(31,20) === CSR_MIE) |
                               (io.insnRdata(31,20) === CSR_MSCRATCH) |
@@ -1260,7 +1261,7 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                 |  io.insnRdata(31,20) === CSR_HPMCOUNTER24H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER25H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER26H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER27H 
                 |  io.insnRdata(31,20) === CSR_HPMCOUNTER28H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER29H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER30H  |  io.insnRdata(31,20) === CSR_HPMCOUNTER31H){
                     // Read-only and readable from user mode only if the bit of mcounteren is set
-                    io.ctrlSig.csrSig.status := Mux(csr_op != CSR_OP_READ, true.B, false.B)
+                    io.ctrlSig.csrSig.status := Mux(io.ctrlSig.csrSig.op != CSR_OP_READ, true.B, false.B)
                 }.elsewhen(io.insnRdata(31,20) === CSR_MCOUNTEREN){
                     // This register only exists in user mode
                     csrIllegal := true.B
@@ -1269,9 +1270,9 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                               (io.insnRdata(31,20) === CSR_DSCRATCH0) |
                               (io.insnRdata(31,20) === CSR_DSCRATCH1)){
                     // Debug register access
-                    when(~io.debug_mode_i){
+                    when(!io.debugMode){
                         csrIllegal := true.B
-                    }.otherwise(){
+                    }.otherwise{
                         io.ctrlSig.csrSig.status := true.B
                     }
                 }.elsewhen((io.insnRdata(31,20) === CSR_TSELECT) |
@@ -1282,7 +1283,7 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                               (io.insnRdata(31,20) === CSR_MCONTEXT) |
                               (io.insnRdata(31,20) === CSR_SCONTEXT)){
                     // Debug Trigger register access
-                    csr_illegal := Mux( DEBUG_TRIGGER_EN , false.B, true.B)
+                    csrIllegal := Mux( (p.DEBUG_TRIGGER_EN ==1).asBool() , false.B, true.B)
                 }.elsewhen((io.insnRdata(31,20) === CSR_LPSTART0) |
                               (io.insnRdata(31,20) === CSR_LPEND0) |
                               (io.insnRdata(31,20) === CSR_LPCOUNT0) |
@@ -1291,10 +1292,10 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                               (io.insnRdata(31,20) === CSR_LPCOUNT1) |
                               (io.insnRdata(31,20) === CSR_UHARTID)){
                     // Hardware loop register, we currently do not implement
-                    csr_illegal := true.B
+                    csrIllegal := true.B
                 }.elsewhen(io.insnRdata(31,20) === CSR_PRIVLV){
                     //PRIVILV access
-                    csr_illegal := true.B
+                    csrIllegal := true.B
                 }.elsewhen((io.insnRdata(31,20) === CSR_PMPCFG0) | (io.insnRdata(31,20) === CSR_PMPCFG1) |
                               (io.insnRdata(31,20) === CSR_PMPCFG2) | (io.insnRdata(31,20) === CSR_PMPCFG3) |
                               (io.insnRdata(31,20) === CSR_PMPADDR0) | (io.insnRdata(31,20) === CSR_PMPADDR1) |
@@ -1309,7 +1310,7 @@ class Decoder()(p: IDParams) extends Module with RequireAsyncReset {
                     csrIllegal  := Mux((p.USE_PMP != 1).asBool(), true.B, false.B)
                 }.elsewhen((io.insnRdata(31,20) === CSR_USTATUS) | (io.insnRdata(31,20) === CSR_UEPC) | (io.insnRdata(31,20) === CSR_UTVEC) | (io.insnRdata(31,20) === CSR_UCAUSE)){
                     // User register access
-                        csr_illegal := true.B
+                        csrIllegal := true.B
                 }.otherwise{
                     csrIllegal      := true.B
                 }

@@ -200,261 +200,261 @@ object CSRNum {
     ///////////////////////////////////////////////////////
 
     // User trap setup
-    val CSR_USTATUS        = "h000"        // Not included (PULP_SECURE = 0)
+    val CSR_USTATUS        = "h000".U        // Not included (PULP_SECURE = 0)
 
     // Floating Point
-    val CSR_FFLAGS         = "h001"        // Included if FPU = 1
-    val CSR_FRM            = "h002"        // Included if FPU = 1
-    val CSR_FCSR           = "h003"        // Included if FPU = 1
+    val CSR_FFLAGS         = "h001".U        // Included if FPU = 1
+    val CSR_FRM            = "h002".U        // Included if FPU = 1
+    val CSR_FCSR           = "h003".U        // Included if FPU = 1
 
     // User trap setup
-    val CSR_UTVEC          = "h005"        // Not included (PULP_SECURE = 0)
+    val CSR_UTVEC          = "h005".U        // Not included (PULP_SECURE = 0)
 
     // User trap handling
-    val CSR_UEPC           = "h041"        // Not included (PULP_SECURE = 0)
-    val CSR_UCAUSE         = "h042"        // Not included (PULP_SECURE = 0)
+    val CSR_UEPC           = "h041".U        // Not included (PULP_SECURE = 0)
+    val CSR_UCAUSE         = "h042".U        // Not included (PULP_SECURE = 0)
 
     ///////////////////////////////////////////////////////
     // User Custom CSRs
     ///////////////////////////////////////////////////////
 
     // Hardware Loop
-    val CSR_LPSTART0       = "h800"        // Custom CSR. Included if PULP_HWLP = 1
-    val CSR_LPEND0         = "h801"        // Custom CSR. Included if PULP_HWLP = 1
-    val CSR_LPCOUNT0       = "h802"        // Custom CSR. Included if PULP_HWLP = 1
-    val CSR_LPSTART1       = "h804"        // Custom CSR. Included if PULP_HWLP = 1
-    val CSR_LPEND1         = "h805"        // Custom CSR. Included if PULP_HWLP = 1
-    val CSR_LPCOUNT1       = "h806"        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPSTART0       = "h800".U        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPEND0         = "h801".U        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPCOUNT0       = "h802".U        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPSTART1       = "h804".U        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPEND1         = "h805".U        // Custom CSR. Included if PULP_HWLP = 1
+    val CSR_LPCOUNT1       = "h806".U        // Custom CSR. Included if PULP_HWLP = 1
 
     // User Hart ID
-    val CSR_UHARTID        = "hCC0"        // Custom CSR. User Hart ID
+    val CSR_UHARTID        = "hCC0".U        // Custom CSR. User Hart ID
 
     // Privilege
-    val CSR_PRIVLV         = "hCC1"        // Custom CSR. Privilege Level
+    val CSR_PRIVLV         = "hCC1".U        // Custom CSR. Privilege Level
 
     ///////////////////////////////////////////////////////
     // Machine CSRs
     ///////////////////////////////////////////////////////
 
     // Machine trap setup
-    val CSR_MSTATUS        = "h300"
-    val CSR_MISA           = "h301"
-    val CSR_MIE            = "h304"
-    val CSR_MTVEC          = "h305"
+    val CSR_MSTATUS        = "h300".U
+    val CSR_MISA           = "h301".U
+    val CSR_MIE            = "h304".U
+    val CSR_MTVEC          = "h305".U
 
     // Performance counters
-    val CSR_MCOUNTEREN     = "h306"
-    val CSR_MCOUNTINHIBIT  = "h320"
-    val CSR_MHPMEVENT3     = "h323"
-    val CSR_MHPMEVENT4     = "h324"
-    val CSR_MHPMEVENT5     = "h325"
-    val CSR_MHPMEVENT6     = "h326"
-    val CSR_MHPMEVENT7     = "h327"
-    val CSR_MHPMEVENT8     = "h328"
-    val CSR_MHPMEVENT9     = "h329"
-    val CSR_MHPMEVENT10    = "h32A"
-    val CSR_MHPMEVENT11    = "h32B"
-    val CSR_MHPMEVENT12    = "h32C"
-    val CSR_MHPMEVENT13    = "h32D"
-    val CSR_MHPMEVENT14    = "h32E"
-    val CSR_MHPMEVENT15    = "h32F"
-    val CSR_MHPMEVENT16    = "h330"
-    val CSR_MHPMEVENT17    = "h331"
-    val CSR_MHPMEVENT18    = "h332"
-    val CSR_MHPMEVENT19    = "h333"
-    val CSR_MHPMEVENT20    = "h334"
-    val CSR_MHPMEVENT21    = "h335"
-    val CSR_MHPMEVENT22    = "h336"
-    val CSR_MHPMEVENT23    = "h337"
-    val CSR_MHPMEVENT24    = "h338"
-    val CSR_MHPMEVENT25    = "h339"
-    val CSR_MHPMEVENT26    = "h33A"
-    val CSR_MHPMEVENT27    = "h33B"
-    val CSR_MHPMEVENT28    = "h33C"
-    val CSR_MHPMEVENT29    = "h33D"
-    val CSR_MHPMEVENT30    = "h33E"
-    val CSR_MHPMEVENT31    = "h33F"
+    val CSR_MCOUNTEREN     = "h306".U
+    val CSR_MCOUNTINHIBIT  = "h320".U
+    val CSR_MHPMEVENT3     = "h323".U
+    val CSR_MHPMEVENT4     = "h324".U
+    val CSR_MHPMEVENT5     = "h325".U
+    val CSR_MHPMEVENT6     = "h326".U
+    val CSR_MHPMEVENT7     = "h327".U
+    val CSR_MHPMEVENT8     = "h328".U
+    val CSR_MHPMEVENT9     = "h329".U
+    val CSR_MHPMEVENT10    = "h32A".U
+    val CSR_MHPMEVENT11    = "h32B".U
+    val CSR_MHPMEVENT12    = "h32C".U
+    val CSR_MHPMEVENT13    = "h32D".U
+    val CSR_MHPMEVENT14    = "h32E".U
+    val CSR_MHPMEVENT15    = "h32F".U
+    val CSR_MHPMEVENT16    = "h330".U
+    val CSR_MHPMEVENT17    = "h331".U
+    val CSR_MHPMEVENT18    = "h332".U
+    val CSR_MHPMEVENT19    = "h333".U
+    val CSR_MHPMEVENT20    = "h334".U
+    val CSR_MHPMEVENT21    = "h335".U
+    val CSR_MHPMEVENT22    = "h336".U
+    val CSR_MHPMEVENT23    = "h337".U
+    val CSR_MHPMEVENT24    = "h338".U
+    val CSR_MHPMEVENT25    = "h339".U
+    val CSR_MHPMEVENT26    = "h33A".U
+    val CSR_MHPMEVENT27    = "h33B".U
+    val CSR_MHPMEVENT28    = "h33C".U
+    val CSR_MHPMEVENT29    = "h33D".U
+    val CSR_MHPMEVENT30    = "h33E".U
+    val CSR_MHPMEVENT31    = "h33F".U
 
-    // Machine trap "hand"ling
-    val CSR_MSCRATCH       = "h340"
-    val CSR_MEPC           = "h341"
-    val CSR_MCAUSE         = "h342"
-    val CSR_MTVAL          = "h343"
-    val CSR_MIP            = "h344"
+    // Machine trap handling
+    val CSR_MSCRATCH       = "h340".U
+    val CSR_MEPC           = "h341".U
+    val CSR_MCAUSE         = "h342".U
+    val CSR_MTVAL          = "h343".U
+    val CSR_MIP            = "h344".U
 
     // Physical memory protection (PMP)
-    val CSR_PMPCFG0        = "h3A0"        // Not included (USE_PMP = 0)
-    val CSR_PMPCFG1        = "h3A1"        // Not included (USE_PMP = 0)
-    val CSR_PMPCFG2        = "h3A2"        // Not included (USE_PMP = 0)
-    val CSR_PMPCFG3        = "h3A3"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR0       = "h3B0"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR1       = "h3B1"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR2       = "h3B2"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR3       = "h3B3"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR4       = "h3B4"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR5       = "h3B5"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR6       = "h3B6"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR7       = "h3B7"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR8       = "h3B8"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR9       = "h3B9"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR10      = "h3BA"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR11      = "h3BB"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR12      = "h3BC"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR13      = "h3BD"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR14      = "h3BE"        // Not included (USE_PMP = 0)
-    val CSR_PMPADDR15      = "h3BF"        // Not included (USE_PMP = 0)
+    val CSR_PMPCFG0        = "h3A0".U        // Not included (USE_PMP = 0)
+    val CSR_PMPCFG1        = "h3A1".U        // Not included (USE_PMP = 0)
+    val CSR_PMPCFG2        = "h3A2".U        // Not included (USE_PMP = 0)
+    val CSR_PMPCFG3        = "h3A3".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR0       = "h3B0".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR1       = "h3B1".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR2       = "h3B2".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR3       = "h3B3".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR4       = "h3B4".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR5       = "h3B5".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR6       = "h3B6".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR7       = "h3B7".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR8       = "h3B8".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR9       = "h3B9".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR10      = "h3BA".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR11      = "h3BB".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR12      = "h3BC".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR13      = "h3BD".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR14      = "h3BE".U        // Not included (USE_PMP = 0)
+    val CSR_PMPADDR15      = "h3BF".U        // Not included (USE_PMP = 0)
 
     // Trigger
-    val CSR_TSELECT        = "h7A0"
-    val CSR_TDATA1         = "h7A1"
-    val CSR_TDATA2         = "h7A2"
-    val CSR_TDATA3         = "h7A3"
-    val CSR_TINFO          = "h7A4"
-    val CSR_MCONTEXT       = "h7A8"
-    val CSR_SCONTEXT       = "h7AA"
+    val CSR_TSELECT        = "h7A0".U
+    val CSR_TDATA1         = "h7A1".U
+    val CSR_TDATA2         = "h7A2".U
+    val CSR_TDATA3         = "h7A3".U
+    val CSR_TINFO          = "h7A4".U
+    val CSR_MCONTEXT       = "h7A8".U
+    val CSR_SCONTEXT       = "h7AA".U
 
     // Debug/trace
-    val CSR_DCSR           = "h7B0"
-    val CSR_DPC            = "h7B1"
+    val CSR_DCSR           = "h7B0".U
+    val CSR_DPC            = "h7B1".U
 
     // Debug
-    val CSR_DSCRATCH0      = "h7B2"
-    val CSR_DSCRATCH1      = "h7B3"
+    val CSR_DSCRATCH0      = "h7B2".U
+    val CSR_DSCRATCH1      = "h7B3".U
 
     // Hardware Performance Monitor
-    val CSR_MCYCLE         = "hB00"
-    val CSR_MINSTRET       = "hB02"
-    val CSR_MHPMCOUNTER3   = "hB03"
-    val CSR_MHPMCOUNTER4   = "hB04"
-    val CSR_MHPMCOUNTER5   = "hB05"
-    val CSR_MHPMCOUNTER6   = "hB06"
-    val CSR_MHPMCOUNTER7   = "hB07"
-    val CSR_MHPMCOUNTER8   = "hB08"
-    val CSR_MHPMCOUNTER9   = "hB09"
-    val CSR_MHPMCOUNTER10  = "hB0A"
-    val CSR_MHPMCOUNTER11  = "hB0B"
-    val CSR_MHPMCOUNTER12  = "hB0C"
-    val CSR_MHPMCOUNTER13  = "hB0D"
-    val CSR_MHPMCOUNTER14  = "hB0E"
-    val CSR_MHPMCOUNTER15  = "hB0F"
-    val CSR_MHPMCOUNTER16  = "hB10"
-    val CSR_MHPMCOUNTER17  = "hB11"
-    val CSR_MHPMCOUNTER18  = "hB12"
-    val CSR_MHPMCOUNTER19  = "hB13"
-    val CSR_MHPMCOUNTER20  = "hB14"
-    val CSR_MHPMCOUNTER21  = "hB15"
-    val CSR_MHPMCOUNTER22  = "hB16"
-    val CSR_MHPMCOUNTER23  = "hB17"
-    val CSR_MHPMCOUNTER24  = "hB18"
-    val CSR_MHPMCOUNTER25  = "hB19"
-    val CSR_MHPMCOUNTER26  = "hB1A"
-    val CSR_MHPMCOUNTER27  = "hB1B"
-    val CSR_MHPMCOUNTER28  = "hB1C"
-    val CSR_MHPMCOUNTER29  = "hB1D"
-    val CSR_MHPMCOUNTER30  = "hB1E"
-    val CSR_MHPMCOUNTER31  = "hB1F"
+    val CSR_MCYCLE         = "hB00".U
+    val CSR_MINSTRET       = "hB02".U
+    val CSR_MHPMCOUNTER3   = "hB03".U
+    val CSR_MHPMCOUNTER4   = "hB04".U
+    val CSR_MHPMCOUNTER5   = "hB05".U
+    val CSR_MHPMCOUNTER6   = "hB06".U
+    val CSR_MHPMCOUNTER7   = "hB07".U
+    val CSR_MHPMCOUNTER8   = "hB08".U
+    val CSR_MHPMCOUNTER9   = "hB09".U
+    val CSR_MHPMCOUNTER10  = "hB0A".U
+    val CSR_MHPMCOUNTER11  = "hB0B".U
+    val CSR_MHPMCOUNTER12  = "hB0C".U
+    val CSR_MHPMCOUNTER13  = "hB0D".U
+    val CSR_MHPMCOUNTER14  = "hB0E".U
+    val CSR_MHPMCOUNTER15  = "hB0F".U
+    val CSR_MHPMCOUNTER16  = "hB10".U
+    val CSR_MHPMCOUNTER17  = "hB11".U
+    val CSR_MHPMCOUNTER18  = "hB12".U
+    val CSR_MHPMCOUNTER19  = "hB13".U
+    val CSR_MHPMCOUNTER20  = "hB14".U
+    val CSR_MHPMCOUNTER21  = "hB15".U
+    val CSR_MHPMCOUNTER22  = "hB16".U
+    val CSR_MHPMCOUNTER23  = "hB17".U
+    val CSR_MHPMCOUNTER24  = "hB18".U
+    val CSR_MHPMCOUNTER25  = "hB19".U
+    val CSR_MHPMCOUNTER26  = "hB1A".U
+    val CSR_MHPMCOUNTER27  = "hB1B".U
+    val CSR_MHPMCOUNTER28  = "hB1C".U
+    val CSR_MHPMCOUNTER29  = "hB1D".U
+    val CSR_MHPMCOUNTER30  = "hB1E".U
+    val CSR_MHPMCOUNTER31  = "hB1F".U
 
-    val CSR_MCYCLEH        = "hB80"
-    val CSR_MINSTRETH      = "hB82"
-    val CSR_MHPMCOUNTER3H  = "hB83"
-    val CSR_MHPMCOUNTER4H  = "hB84"
-    val CSR_MHPMCOUNTER5H  = "hB85"
-    val CSR_MHPMCOUNTER6H  = "hB86"
-    val CSR_MHPMCOUNTER7H  = "hB87"
-    val CSR_MHPMCOUNTER8H  = "hB88"
-    val CSR_MHPMCOUNTER9H  = "hB89"
-    val CSR_MHPMCOUNTER10H = "hB8A"
-    val CSR_MHPMCOUNTER11H = "hB8B"
-    val CSR_MHPMCOUNTER12H = "hB8C"
-    val CSR_MHPMCOUNTER13H = "hB8D"
-    val CSR_MHPMCOUNTER14H = "hB8E"
-    val CSR_MHPMCOUNTER15H = "hB8F"
-    val CSR_MHPMCOUNTER16H = "hB90"
-    val CSR_MHPMCOUNTER17H = "hB91"
-    val CSR_MHPMCOUNTER18H = "hB92"
-    val CSR_MHPMCOUNTER19H = "hB93"
-    val CSR_MHPMCOUNTER20H = "hB94"
-    val CSR_MHPMCOUNTER21H = "hB95"
-    val CSR_MHPMCOUNTER22H = "hB96"
-    val CSR_MHPMCOUNTER23H = "hB97"
-    val CSR_MHPMCOUNTER24H = "hB98"
-    val CSR_MHPMCOUNTER25H = "hB99"
-    val CSR_MHPMCOUNTER26H = "hB9A"
-    val CSR_MHPMCOUNTER27H = "hB9B"
-    val CSR_MHPMCOUNTER28H = "hB9C"
-    val CSR_MHPMCOUNTER29H = "hB9D"
-    val CSR_MHPMCOUNTER30H = "hB9E"
-    val CSR_MHPMCOUNTER31H = "hB9F"
+    val CSR_MCYCLEH        = "hB80".U
+    val CSR_MINSTRETH      = "hB82".U
+    val CSR_MHPMCOUNTER3H  = "hB83".U
+    val CSR_MHPMCOUNTER4H  = "hB84".U
+    val CSR_MHPMCOUNTER5H  = "hB85".U
+    val CSR_MHPMCOUNTER6H  = "hB86".U
+    val CSR_MHPMCOUNTER7H  = "hB87".U
+    val CSR_MHPMCOUNTER8H  = "hB88".U
+    val CSR_MHPMCOUNTER9H  = "hB89".U
+    val CSR_MHPMCOUNTER10H = "hB8A".U
+    val CSR_MHPMCOUNTER11H = "hB8B".U
+    val CSR_MHPMCOUNTER12H = "hB8C".U
+    val CSR_MHPMCOUNTER13H = "hB8D".U
+    val CSR_MHPMCOUNTER14H = "hB8E".U
+    val CSR_MHPMCOUNTER15H = "hB8F".U
+    val CSR_MHPMCOUNTER16H = "hB90".U
+    val CSR_MHPMCOUNTER17H = "hB91".U
+    val CSR_MHPMCOUNTER18H = "hB92".U
+    val CSR_MHPMCOUNTER19H = "hB93".U
+    val CSR_MHPMCOUNTER20H = "hB94".U
+    val CSR_MHPMCOUNTER21H = "hB95".U
+    val CSR_MHPMCOUNTER22H = "hB96".U
+    val CSR_MHPMCOUNTER23H = "hB97".U
+    val CSR_MHPMCOUNTER24H = "hB98".U
+    val CSR_MHPMCOUNTER25H = "hB99".U
+    val CSR_MHPMCOUNTER26H = "hB9A".U
+    val CSR_MHPMCOUNTER27H = "hB9B".U
+    val CSR_MHPMCOUNTER28H = "hB9C".U
+    val CSR_MHPMCOUNTER29H = "hB9D".U
+    val CSR_MHPMCOUNTER30H = "hB9E".U
+    val CSR_MHPMCOUNTER31H = "hB9F".U
 
-    val CSR_CYCLE          = "hC00"
-    val CSR_INSTRET        = "hC02"
-    val CSR_HPMCOUNTER3    = "hC03"
-    val CSR_HPMCOUNTER4    = "hC04"
-    val CSR_HPMCOUNTER5    = "hC05"
-    val CSR_HPMCOUNTER6    = "hC06"
-    val CSR_HPMCOUNTER7    = "hC07"
-    val CSR_HPMCOUNTER8    = "hC08"
-    val CSR_HPMCOUNTER9    = "hC09"
-    val CSR_HPMCOUNTER10   = "hC0A"
-    val CSR_HPMCOUNTER11   = "hC0B"
-    val CSR_HPMCOUNTER12   = "hC0C"
-    val CSR_HPMCOUNTER13   = "hC0D"
-    val CSR_HPMCOUNTER14   = "hC0E"
-    val CSR_HPMCOUNTER15   = "hC0F"
-    val CSR_HPMCOUNTER16   = "hC10"
-    val CSR_HPMCOUNTER17   = "hC11"
-    val CSR_HPMCOUNTER18   = "hC12"
-    val CSR_HPMCOUNTER19   = "hC13"
-    val CSR_HPMCOUNTER20   = "hC14"
-    val CSR_HPMCOUNTER21   = "hC15"
-    val CSR_HPMCOUNTER22   = "hC16"
-    val CSR_HPMCOUNTER23   = "hC17"
-    val CSR_HPMCOUNTER24   = "hC18"
-    val CSR_HPMCOUNTER25   = "hC19"
-    val CSR_HPMCOUNTER26   = "hC1A"
-    val CSR_HPMCOUNTER27   = "hC1B"
-    val CSR_HPMCOUNTER28   = "hC1C"
-    val CSR_HPMCOUNTER29   = "hC1D"
-    val CSR_HPMCOUNTER30   = "hC1E"
-    val CSR_HPMCOUNTER31   = "hC1F"
+    val CSR_CYCLE          = "hC00".U
+    val CSR_INSTRET        = "hC02".U
+    val CSR_HPMCOUNTER3    = "hC03".U
+    val CSR_HPMCOUNTER4    = "hC04".U
+    val CSR_HPMCOUNTER5    = "hC05".U
+    val CSR_HPMCOUNTER6    = "hC06".U
+    val CSR_HPMCOUNTER7    = "hC07".U
+    val CSR_HPMCOUNTER8    = "hC08".U
+    val CSR_HPMCOUNTER9    = "hC09".U
+    val CSR_HPMCOUNTER10   = "hC0A".U
+    val CSR_HPMCOUNTER11   = "hC0B".U
+    val CSR_HPMCOUNTER12   = "hC0C".U
+    val CSR_HPMCOUNTER13   = "hC0D".U
+    val CSR_HPMCOUNTER14   = "hC0E".U
+    val CSR_HPMCOUNTER15   = "hC0F".U
+    val CSR_HPMCOUNTER16   = "hC10".U
+    val CSR_HPMCOUNTER17   = "hC11".U
+    val CSR_HPMCOUNTER18   = "hC12".U
+    val CSR_HPMCOUNTER19   = "hC13".U
+    val CSR_HPMCOUNTER20   = "hC14".U
+    val CSR_HPMCOUNTER21   = "hC15".U
+    val CSR_HPMCOUNTER22   = "hC16".U
+    val CSR_HPMCOUNTER23   = "hC17".U
+    val CSR_HPMCOUNTER24   = "hC18".U
+    val CSR_HPMCOUNTER25   = "hC19".U
+    val CSR_HPMCOUNTER26   = "hC1A".U
+    val CSR_HPMCOUNTER27   = "hC1B".U
+    val CSR_HPMCOUNTER28   = "hC1C".U
+    val CSR_HPMCOUNTER29   = "hC1D".U
+    val CSR_HPMCOUNTER30   = "hC1E".U
+    val CSR_HPMCOUNTER31   = "hC1F".U
 
-    val CSR_CYCLEH         = "hC80"
-    val CSR_INSTRETH       = "hC82"
-    val CSR_HPMCOUNTER3H   = "hC83"
-    val CSR_HPMCOUNTER4H   = "hC84"
-    val CSR_HPMCOUNTER5H   = "hC85"
-    val CSR_HPMCOUNTER6H   = "hC86"
-    val CSR_HPMCOUNTER7H   = "hC87"
-    val CSR_HPMCOUNTER8H   = "hC88"
-    val CSR_HPMCOUNTER9H   = "hC89"
-    val CSR_HPMCOUNTER10H  = "hC8A"
-    val CSR_HPMCOUNTER11H  = "hC8B"
-    val CSR_HPMCOUNTER12H  = "hC8C"
-    val CSR_HPMCOUNTER13H  = "hC8D"
-    val CSR_HPMCOUNTER14H  = "hC8E"
-    val CSR_HPMCOUNTER15H  = "hC8F"
-    val CSR_HPMCOUNTER16H  = "hC90"
-    val CSR_HPMCOUNTER17H  = "hC91"
-    val CSR_HPMCOUNTER18H  = "hC92"
-    val CSR_HPMCOUNTER19H  = "hC93"
-    val CSR_HPMCOUNTER20H  = "hC94"
-    val CSR_HPMCOUNTER21H  = "hC95"
-    val CSR_HPMCOUNTER22H  = "hC96"
-    val CSR_HPMCOUNTER23H  = "hC97"
-    val CSR_HPMCOUNTER24H  = "hC98"
-    val CSR_HPMCOUNTER25H  = "hC99"
-    val CSR_HPMCOUNTER26H  = "hC9A"
-    val CSR_HPMCOUNTER27H  = "hC9B"
-    val CSR_HPMCOUNTER28H  = "hC9C"
-    val CSR_HPMCOUNTER29H  = "hC9D"
-    val CSR_HPMCOUNTER30H  = "hC9E"
-    val CSR_HPMCOUNTER31H  = "hC9F"
+    val CSR_CYCLEH         = "hC80".U
+    val CSR_INSTRETH       = "hC82".U
+    val CSR_HPMCOUNTER3H   = "hC83".U
+    val CSR_HPMCOUNTER4H   = "hC84".U
+    val CSR_HPMCOUNTER5H   = "hC85".U
+    val CSR_HPMCOUNTER6H   = "hC86".U
+    val CSR_HPMCOUNTER7H   = "hC87".U
+    val CSR_HPMCOUNTER8H   = "hC88".U
+    val CSR_HPMCOUNTER9H   = "hC89".U
+    val CSR_HPMCOUNTER10H  = "hC8A".U
+    val CSR_HPMCOUNTER11H  = "hC8B".U
+    val CSR_HPMCOUNTER12H  = "hC8C".U
+    val CSR_HPMCOUNTER13H  = "hC8D".U
+    val CSR_HPMCOUNTER14H  = "hC8E".U
+    val CSR_HPMCOUNTER15H  = "hC8F".U
+    val CSR_HPMCOUNTER16H  = "hC90".U
+    val CSR_HPMCOUNTER17H  = "hC91".U
+    val CSR_HPMCOUNTER18H  = "hC92".U
+    val CSR_HPMCOUNTER19H  = "hC93".U
+    val CSR_HPMCOUNTER20H  = "hC94".U
+    val CSR_HPMCOUNTER21H  = "hC95".U
+    val CSR_HPMCOUNTER22H  = "hC96".U
+    val CSR_HPMCOUNTER23H  = "hC97".U
+    val CSR_HPMCOUNTER24H  = "hC98".U
+    val CSR_HPMCOUNTER25H  = "hC99".U
+    val CSR_HPMCOUNTER26H  = "hC9A".U
+    val CSR_HPMCOUNTER27H  = "hC9B".U
+    val CSR_HPMCOUNTER28H  = "hC9C".U
+    val CSR_HPMCOUNTER29H  = "hC9D".U
+    val CSR_HPMCOUNTER30H  = "hC9E".U
+    val CSR_HPMCOUNTER31H  = "hC9F".U
 
     // Machine information
-    val CSR_MVENDORID      = "hF11"
-    val CSR_MARCHID        = "hF12"
-    val CSR_MIMPID         = "hF13"
-    val CSR_MHARTID        = "hF14"
+    val CSR_MVENDORID      = "hF11".U
+    val CSR_MARCHID        = "hF12".U
+    val CSR_MIMPID         = "hF13".U
+    val CSR_MHARTID        = "hF14".U
 }
 
 
