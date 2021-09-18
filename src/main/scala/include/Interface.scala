@@ -179,6 +179,18 @@ class RegUsed()(p: IDParams) extends Bundle {
 }
 
 /**
+  * APU used signals
+  * (APU : interface of fpu outside)
+  * @param p: subclass of BasicParams -> Parameters for the module
+  */
+  class APUSig[T <: BasicParams]()(p: T) extends Bundle {
+    val en              = Bool()
+    val op              = UInt(p.APU_WOP_CPU.W)
+    val lat             = UInt(2.W)
+    val fpRndMode       = UInt(3.W)
+}
+
+/**
   * ALU control signals
   *
   * @param p: subclass of BasicParams -> Parameters for the module
@@ -273,6 +285,7 @@ class LSUSig[T <: BasicParams]()(p: T) extends Bundle {
 class CtrlSig[T <: BasicParams]()(p: T) extends Bundle {
     val aluSig      = Output(new ALUSig()(p))       // ALU signals
     val mulSig      = Output(new MULSig()(p))       // MULT signals
+    val apuSig      = Output(new APUSig()(p))       // APU signals
     val fpuSig      = new FPUSig()(p)               // FPU signals
     val regfileSig  = Output(new RegfileSig()(p))   // Register file related signals
     val csrSig      = Output(new CSRSig()(p))       // CSR manipulation signals
